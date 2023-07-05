@@ -1,6 +1,6 @@
 # Is today / this week / this month hotter than usual?
 
-This web app lets you visualize weather trends for any geolocation. 
+This web app lets you visualize and compare weather trends for any geolocation. 
 Inspect historical data for any specific date, calender week or month in a timespan from 1940 until today. 
 
 ![usagegif](public/readme/usage.gif)
@@ -11,7 +11,7 @@ This is a [Next.js](https://nextjs.org/) app using [React-Vis](https://uber.gith
 
 ## Try it out
 
-Run the development server:
+Clone the repo and run the development server:
 
 ```bash
 npm run dev

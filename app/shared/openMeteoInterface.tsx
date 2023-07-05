@@ -15,7 +15,7 @@ async function getHistoricalData(latitude: number, longitude: number, startDate:
  * @returns Recent data (past 5 days) for the current state of the form
  */
 async function getRecentData(latitude: number, longitude: number) {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&past_days=5&forecast_days=1&timezone=Europe%2FBerlin`);
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&past_days=7&forecast_days=1&timezone=Europe%2FBerlin`);
     const msg = await res.json();
     return msg;
 }
@@ -38,16 +38,27 @@ export async function getOpenMeteoData(state: formState, setState: React.Dispatc
     });
 
     // Now if the end date is more recent than 5 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 432000000) {
+    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 604800000) {
         // calculate the date difference 
-        var dayDiff = todaysDate.getDate() - new Date(state.endDate).getDate()
+        var dayDiff = new Date(state.endDate).getDate() - todaysDate.getDate()
+        const originalDiff = todaysDate.getDate()-new Date(state.endDate).getDate()
         const recentData = await getRecentData(state.latitude!, state.longitude!);
         // add the recent data until dayDiff is 0
         recentData.daily.time.forEach((k: string, i: number) => {
-            if (dayDiff <= 5) {
-                min.at(-(6 - dayDiff)).y = parseFloat(recentData.daily.temperature_2m_min[i])
-                max.at(-(6 - dayDiff)).y = parseFloat(recentData.daily.temperature_2m_max[i])
-                prec.at(-(6 - dayDiff)).y = parseFloat(recentData.daily.precipitation_sum[i])
+            /*if (new Date(k).valueOf() < new Date(state.startDate).valueOf()) {
+                return;
+            }
+            if (new Date(k).valueOf() > new Date(state.endDate).valueOf()) { ////??????? why not
+                return;
+            }*/
+            if (dayDiff <= 7) {
+                const index = (dayDiff - 8)
+                min.at(index).y = parseFloat(recentData.daily.temperature_2m_min[i])
+                max.at(index).y = parseFloat(recentData.daily.temperature_2m_max[i])
+                // for forecast data we approximate the mean, which yields okay errors at daily measures (~1C)
+                mean.at(index).y = (max.at(index).y + min.at(index).y) / 2
+
+                prec.at(index).y = parseFloat(recentData.daily.precipitation_sum[i])
             }
             dayDiff++
         });
@@ -84,13 +95,15 @@ export async function getDateHistory(state: formState, setState: React.Dispatch<
     });
 
     // Now if the end date is more recent than 5 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 432000000) {
+    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 604800000) {
         const recentData = await getRecentData(state.latitude!, state.longitude!);
         // add the recent data which will be the last entry of the arrays filled before
         recentData.daily.time.forEach((k: string, i: number) => {
             if (k.slice(5) === state.targetDate.slice(5)) {
                 min.at(-1).y = parseFloat(recentData.daily.temperature_2m_min[i])
                 max.at(-1).y = parseFloat(recentData.daily.temperature_2m_max[i])
+                // for forecast data we approximate the mean, which yields okay errors at daily measures (~1C)
+                mean.at(-1).y = (max.at(-1).y + min.at(-1).y) / 2
             }
         });
     }
@@ -134,32 +147,44 @@ export async function getWeekHistory(state: formState, setState: React.Dispatch<
             i = i + 363
 
             //only take the average if we have mean data for the whole week
-            let avg
+            /*let avg
             if (weekMeanData.length === 7) {
                 avg = (weekMeanData.reduce((a: number, b: any) => a + (b || 0), 0) / weekMeanData.length).toFixed(2)
-            }
+            }*/
 
             //const xVal = weekInfo[0]+'-W'+weekInfo[1]
             const xVal = weekInfo[0]
             min.push({ x: xVal, y: Math.min(...weekMinData) })
             max.push({ x: xVal, y: Math.max(...weekMaxData) })
-            mean.push({ x: xVal, y: (avg || undefined) })
+            //mean.push({ x: xVal, y: (avg || undefined) })
+            mean.push({ x: xVal, y: weekMeanData })
         }
     }
 
-    // Now if the end date is more recent than 5 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 432000000) {
+    // Now if the end date is more recent than 7 days ago, also fetch the forecast data for the more recent dates
+    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 604800000) {
         const recentData = await getRecentData(state.latitude!, state.longitude!);
         // add the recent data which will be the last entry of the arrays filled before
         recentData.daily.time.forEach((k: string, i: number) => {
+            if (new Date(k).valueOf() < new Date(state.startDate).valueOf()) {
+                return;
+            }
             const weekInfo = getWeekNumber(new Date(k));
             if (weekInfo[1] === (state.targetWeek.slice(6))) {
                 // We only take the values of they are bigger/smaller than the ones we found so far
                 min.at(-1).y = Math.min(min.at(-1).y, parseFloat(recentData.daily.temperature_2m_min[i]))
                 max.at(-1).y = Math.max(max.at(-1).y, parseFloat(recentData.daily.temperature_2m_max[i]))
+                // approximate forecast mean data
+                mean.at(-1).y.push((max.at(-1).y + min.at(-1).y) / 2)
             }
         });
     }
+
+    // first filter out the nan values
+    mean.forEach((d: any) => {
+        d.y = d.y.filter((x: number)=>!Number.isNaN((x)))
+        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) / d.y.length).toFixed(2)
+    });
 
     setState({
         ...state,
@@ -191,30 +216,22 @@ export async function getMonthHistory(state: formState, setState: React.Dispatch
             //check if we already have an entry for this month else create a new one
             if (min.length === 0 || min.at(-1)?.x !== year) {
                 const xVal = year
-                min.push({ x: xVal, y: parseFloat(msg.daily.temperature_2m_min[i])||Infinity })
-                max.push({ x: xVal, y: parseFloat(msg.daily.temperature_2m_max[i]||-Infinity) })
-                mean.push({ x: xVal, y: [parseFloat(msg.daily.temperature_2m_mean[i])]})
-                prec.push({ x: xVal, y: [parseFloat(msg.daily.precipitation_sum[i])]})
+                min.push({ x: xVal, y: parseFloat(msg.daily.temperature_2m_min[i]) || Infinity })
+                max.push({ x: xVal, y: parseFloat(msg.daily.temperature_2m_max[i] || -Infinity) })
+                mean.push({ x: xVal, y: [parseFloat(msg.daily.temperature_2m_mean[i])] })
+                prec.push({ x: xVal, y: [parseFloat(msg.daily.precipitation_sum[i])] })
             }
             else {
-                min.at(-1).y = Math.min(min.at(-1).y, parseFloat(msg.daily.temperature_2m_min[i])||Infinity)
-                max.at(-1).y = Math.max(max.at(-1).y, parseFloat(msg.daily.temperature_2m_max[i])||-Infinity)
+                min.at(-1).y = Math.min(min.at(-1).y, parseFloat(msg.daily.temperature_2m_min[i]) || Infinity)
+                max.at(-1).y = Math.max(max.at(-1).y, parseFloat(msg.daily.temperature_2m_max[i]) || -Infinity)
                 mean.at(-1).y.push(parseFloat(msg.daily.temperature_2m_mean[i]))
                 prec.at(-1).y.push(parseFloat(msg.daily.precipitation_sum[i]))
             }
         }
     }
 
-    mean.forEach((d:any) => {
-        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) / d.y.length).toFixed(2)
-    });
-
-    prec.forEach((d:any) => {
-        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) / d.y.length).toFixed(2)
-    });
-
     // Now if the end date is more recent than 5 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 432000000) {
+    if (todaysDate.valueOf() - new Date(state.endDate).valueOf() <= 604800000) {
         const recentData = await getRecentData(state.latitude!, state.longitude!);
         // add the recent data which will be the last entry of the arrays filled before
         recentData.daily.time.forEach((k: string, i: number) => {
@@ -223,9 +240,22 @@ export async function getMonthHistory(state: formState, setState: React.Dispatch
                 // We only take the values of they are bigger/smaller than the ones we found so far
                 min.at(-1).y = Math.min(min.at(-1).y, parseFloat(recentData.daily.temperature_2m_min[i]))
                 max.at(-1).y = Math.max(max.at(-1).y, parseFloat(recentData.daily.temperature_2m_max[i]))
+                // for forecast data we approximate the mean, which yields okay errors at daily measures (~1C)
+                mean.at(-1).y.push((max.at(-1).y + min.at(-1).y) / 2)
+                prec.at(-1).y.push(parseFloat(recentData.daily.precipitation_sum[i]))
             }
         });
     }
+
+    // first filter out the nan values
+    mean.forEach((d: any) => {
+        d.y = d.y.filter((x: number)=>!Number.isNaN((x)))
+        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) / d.y.length).toFixed(2)
+    });
+
+    prec.forEach((d: any) => {
+        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) /*/ d.y.length*/).toFixed(2)
+    });
 
     setState({
         ...state,

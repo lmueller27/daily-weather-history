@@ -2,13 +2,8 @@ import { weatherPoint } from "./utils"
 
 // Least squares method to determine the line of best fit for the data
 export function leastSquaresLinearRegression(data: weatherPoint[]) {
-    //xValues = data.map(d=> new Date(d.x).valueOf())
-    //const xValues = [...Array(data.length).keys()]
-    const xValues = [];
-    for (var i = 0; i < data.length; i++) {
-        xValues.push(i);
-    }
-
+    
+    const xValues = Array.from(Array(data.length).keys())
     const xMean = (xValues.reduce((a, b) => a + (b || 0), 0) / xValues.length)
 
     const yValues = data.map(d => Number(d.y))
