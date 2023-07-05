@@ -1,5 +1,5 @@
 {
-  "name": "daily-temp-history",
+  "name": "daily-weather-history",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,17 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/node": "20.3.1",
     "@types/react": "18.2.13",
     "@types/react-dom": "18.2.6",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
     "autoprefixer": "10.4.14",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",
     "next": "13.4.7",
+    "pigeon-maps": "^0.21.3",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-transition-group": "^4.4.5",
+    "react-virtualized-auto-sizer": "^1.0.20",
+    "react-vis": "^1.12.1",
     "tailwindcss": "3.3.2",
     "typescript": "5.1.3"
+  },
+  "devDependencies": {
+    "@types/react-transition-group": "^4.4.6",
+    "@types/react-vis": "^1.11.11"
   }
 }
