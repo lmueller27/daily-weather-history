@@ -65,6 +65,11 @@
     opacity: 50%;
 }
 
+.activatedMode {
+    background-color: lightslategray !important;
+    color: white;
+}
+
 /* Main space of the form with figure and settings */
 
 .figureSpace {
@@ -89,7 +94,13 @@
     overflow: hidden;
 }
 
-
+.locationButton {
+    border: 0.5px solid;
+    border-radius: 10px;
+    border-color: lightslategray;
+    padding: 0.1rem;
+    background-color: white;
+}
 
 .inputSpace {
     display: flex;

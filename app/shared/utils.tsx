@@ -22,10 +22,20 @@ export interface formState {
     showMax: boolean,
     showMean: boolean,
     showPrec: boolean,
+    showTrend: boolean,
     keepCrosshair: boolean,
     showTargetDate: boolean,
     showTargetWeek: boolean,
-    formTitle: string
+    formTitle: string,
+    formGeoString: string,
+    currentVisMode: visualizationModes | null,
+}
+
+export enum visualizationModes {
+    DateHistory = 0,
+    WeekHistory = 1,
+    MonthHistory = 2,
+    Interval = 3,
 }
 
 export enum myColors {
@@ -33,7 +43,7 @@ export enum myColors {
     Blue = '#3fa1e8',
     Green = '#3ba365',
     Yellow = '#f5bc51',
-    IconBlue = "#0070f3",
+    IconBlue = "#0070f3"
 }
 
 /**

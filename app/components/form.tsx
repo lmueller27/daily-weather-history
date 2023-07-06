@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import '../../node_modules/react-vis/dist/style.css';
 import styles from './form.module.css'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -28,12 +28,15 @@ export default function Form(props: any) {
         crosshairValues: [],
         showMin: true,
         showMax: true,
-        showMean: true,
+        showMean: false,
         showPrec: false,
+        showTrend: true,
         keepCrosshair: false,
         showTargetDate: false,
         showTargetWeek: false,
         formTitle: 'Select a visualization',
+        formGeoString: '',
+        currentVisMode: null,
     })
 
     // not used
@@ -44,7 +47,8 @@ export default function Form(props: any) {
             <InputSpace state={state} setState={setState} />
             <GenerateButtons state={state} setState={setState} />
             <h1>{state.formTitle}</h1>
-            <h4>Click on the series to freeze/unfreeze the tooltip.</h4>
+            <p>{state.formGeoString}</p>
+            <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in.</h4>
             <AutoSizer disableHeight>
                 {({ width }: any) => (
                     <div className={styles.figureSpace}>
@@ -60,7 +64,7 @@ export default function Form(props: any) {
 
 /**
  * <ul>
-                {state.tempDataMean.map((temp) => (
+                {state.tempData[0].map((temp) => (
                     <li key={temp.x}>
                         <span>{temp.x + ''} : {temp.y}</span>
                     </li>

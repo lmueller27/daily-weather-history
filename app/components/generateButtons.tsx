@@ -1,15 +1,15 @@
 import { getDateHistory, getMonthHistory, getOpenMeteoData, getWeekHistory } from "../shared/openMeteoInterface";
-import { formState } from "../shared/utils";
+import { formState, visualizationModes } from "../shared/utils";
 import styles from './form.module.css'
 
 export function GenerateButtons({ state, setState }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>> }) {
     return (
         <div className={styles.generateButtons}>
             <p>Show Data For:</p>
-            <button type="button" onClick={() => getDateHistory(state, setState)} disabled={validateDateHistoryInput()}>History of Target Date</button>
-            <button type="button" onClick={() => getWeekHistory(state, setState)} disabled={validateWeekHistoryInput()}>History of Target Week</button>
-            <button type="button" onClick={() => getMonthHistory(state, setState)} disabled={validateDateHistoryInput()}>History of Target Month</button>
-            <button type="button" onClick={() => getOpenMeteoData(state, setState)} disabled={validateIntervalInput()}>Whole Interval (max 10 years)</button>
+            <button type="button" className={state.currentVisMode===visualizationModes.DateHistory?styles.activatedMode:undefined} onClick={() => getDateHistory(state, setState)} disabled={validateDateHistoryInput()}>History of Target Date</button>
+            <button type="button" className={state.currentVisMode===visualizationModes.WeekHistory?styles.activatedMode:undefined} onClick={() => getWeekHistory(state, setState)} disabled={validateWeekHistoryInput()}>History of Target Week</button>
+            <button type="button" className={state.currentVisMode===visualizationModes.MonthHistory?styles.activatedMode:undefined} onClick={() => getMonthHistory(state, setState)} disabled={validateDateHistoryInput()}>History of Target Month</button>
+            <button type="button" className={state.currentVisMode===visualizationModes.Interval?styles.activatedMode:undefined} onClick={() => getOpenMeteoData(state, setState)} disabled={validateIntervalInput()}>Whole Interval (max 10 years)</button>
         </div>
     )
 
