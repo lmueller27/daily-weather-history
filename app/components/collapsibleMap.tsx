@@ -5,9 +5,8 @@ import { formState, myColors } from "../shared/utils"
 import { useRef, useState } from "react"
 import styles from './form.module.css'
 
-export default function CollapsibleMap({ state, setState }: { state: formState, setState:React.Dispatch<React.SetStateAction<formState>> }) {
+export default function CollapsibleMap({ state, setState, center, setCenter }: { state: formState, setState:React.Dispatch<React.SetStateAction<formState>>, center: [number, number], setCenter: React.Dispatch<React.SetStateAction<[number, number]>> }) {
 
-    const [center, setCenter] = useState<[number, number]>([50.80, 6.10])
     const [zoom, setZoom] = useState(11)
     const [mapOpen, setMapOpen] = useState(true);
 

@@ -3,8 +3,11 @@ import { formState, myColors } from "../shared/utils"
 import CollapsibleMap from "./collapsibleMap"
 import styles from './form.module.css'
 import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons"
+import { useState } from "react"
 
 export function InputSpace({ state, setState }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>> }) {
+    const [center, setCenter] = useState<[number, number]>([50.80, 6.10])
+
     return (
         <div className={styles.inputSpace}>
             <form className={styles.settingForm}>
@@ -20,13 +23,16 @@ export function InputSpace({ state, setState }: { state: formState, setState: Re
                 <label htmlFor="enddate">-</label>
                 <input type="date" id="enddate" name="enddate" value={state.endDate} min={state.startDate} max={new Date().toISOString().slice(0, -14)} onChange={(e) => { setState({ ...state, endDate: e.target.value }) }} />
             </form>
-            <CollapsibleMap state={state} setState={setState} />
+            <CollapsibleMap state={state} setState={setState} center={center} setCenter={setCenter} />
         </div >
     )
 
     function getUserLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => { setState({ ...state, latitude: Number(position.coords.latitude.toFixed(2)), longitude: Number(position.coords.longitude.toFixed(2)) }) }/*, errorFunction*/);
+            navigator.geolocation.getCurrentPosition((position) => { 
+                setState({ ...state, latitude: Number(position.coords.latitude.toFixed(2)), longitude: Number(position.coords.longitude.toFixed(2)) });
+                setCenter([position.coords.latitude, position.coords.longitude]) 
+            }/*, errorFunction*/);
         }
         /** Todo: handle errors. getCurrentPosition takes an error function as second argument  */
     }
