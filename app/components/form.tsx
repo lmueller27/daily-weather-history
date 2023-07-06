@@ -43,6 +43,8 @@ export default function Form(props: any) {
     // not used
     const [inputIsIncomplete, setInputIsIncomplete] = useState(false)
 
+    const [center, setCenter] = useState<[number, number]>([50.80, 6.10])
+
     return (
         <div className={styles.form}>
             <InputSpace state={state} setState={setState} />

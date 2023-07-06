@@ -5,7 +5,7 @@ import { formState, myColors } from "../shared/utils"
 import { useRef, useState } from "react"
 import styles from './form.module.css'
 
-export default function CollapsibleMap({ state, setState, center, setCenter }: { state: formState, setState:React.Dispatch<React.SetStateAction<formState>>, center: [number, number], setCenter: React.Dispatch<React.SetStateAction<[number, number]>> }) {
+export default function CollapsibleMap({ state, setState, center, setCenter }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>>, center: [number, number], setCenter: React.Dispatch<React.SetStateAction<[number, number]>> }) {
 
     const [zoom, setZoom] = useState(11)
     const [mapOpen, setMapOpen] = useState(true);
@@ -14,8 +14,8 @@ export default function CollapsibleMap({ state, setState, center, setCenter }: {
 
     return (
         <div>
-            <button type="button" onClick={()=>setMapOpen(!mapOpen)}>{mapOpen ? <p><FontAwesomeIcon icon={faChevronUp} color={myColors.IconBlue}/> Collapse Map</p> : <p><FontAwesomeIcon icon={faChevronDown} color={myColors.IconBlue}/> Expand Map <FontAwesomeIcon icon={faMapLocationDot} color={myColors.IconBlue}/></p>}</button>
-            <div ref={mapRef} className={styles.mapSpace} style={mapOpen?{height: mapRef.current?.scrollHeight+'px'}:{height:"0px"}}>
+            <button type="button" onClick={() => setMapOpen(!mapOpen)}>{mapOpen ? <p><FontAwesomeIcon icon={faChevronUp} color={myColors.IconBlue} /> Collapse Map</p> : <p><FontAwesomeIcon icon={faChevronDown} color={myColors.IconBlue} /> Expand Map <FontAwesomeIcon icon={faMapLocationDot} color={myColors.IconBlue} /></p>}</button>
+            <div ref={mapRef} className={styles.mapSpace} style={mapOpen ? { height: mapRef.current?.scrollHeight + 'px' } : { height: "0px" }}>
                 <Map
                     height={300}
                     defaultCenter={[50.8, 6.10]}
@@ -28,7 +28,8 @@ export default function CollapsibleMap({ state, setState, center, setCenter }: {
                         setZoom(zoom)
                     }}>
                     <Draggable offset={[6, 20]} anchor={[Number(state.latitude), Number(state.longitude)]} onDragEnd={updateMarker}>
-                        <FontAwesomeIcon icon={faLocationDot} color={myColors.IconBlue} />
+                        {(!Number.isNaN(state.latitude) && !Number.isNaN(state.longitude)) && (state.latitude != undefined && state.longitude != undefined) ?
+                            <FontAwesomeIcon icon={faLocationDot} color={myColors.IconBlue} /> : null}
                     </Draggable>
                 </Map>
             </div>
