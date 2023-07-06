@@ -29,6 +29,7 @@ export default function Form(props: any) {
         showMin: true,
         showMax: true,
         showMean: false,
+        showMedian: false,
         showPrec: false,
         showTrend: true,
         keepCrosshair: false,

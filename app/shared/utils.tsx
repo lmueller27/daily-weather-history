@@ -21,6 +21,7 @@ export interface formState {
     showMin: boolean,
     showMax: boolean,
     showMean: boolean,
+    showMedian: boolean,
     showPrec: boolean,
     showTrend: boolean,
     keepCrosshair: boolean,
