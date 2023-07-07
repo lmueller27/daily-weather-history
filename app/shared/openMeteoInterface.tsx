@@ -1,4 +1,4 @@
-import { formState, getWeekNumber, median, visualizationModes } from "./utils";
+import { formState, getWeekNumber, inputState, median, visualizationModes } from "./utils";
 
 /**
  * 
@@ -23,12 +23,12 @@ async function getRecentData(latitude: number, longitude: number) {
 /**
      * This fails to visualize for big timespans. Also we dont really need it as it is implemented in many other apps
      */
-export async function getOpenMeteoData(state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
+export async function getOpenMeteoData(inputState: inputState, state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
     const now = Date.now()
     const todaysDate = now - (now % 86400000)
 
     // First get the historical data
-    const msg = await getHistoricalData(state.latitude!, state.longitude!, state.startDate, state.endDate);
+    const msg = await getHistoricalData(inputState.latitude!, inputState.longitude!, inputState.startDate, inputState.endDate);
 
     let min: any = [], max: any = [], mean: any = [], prec: any = []
 
@@ -40,14 +40,14 @@ export async function getOpenMeteoData(state: formState, setState: React.Dispatc
     });
 
     // Now if the end date is more recent than 7 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate - new Date(state.endDate).valueOf() <= 604800000) {
+    if (todaysDate - new Date(inputState.endDate).valueOf() <= 604800000) {
         // calculate the date offset 
-        const offset = (new Date(state.endDate).valueOf() - (todaysDate - 604800000)) / (1000 * 60 * 60 * 24)
+        const offset = (new Date(inputState.endDate).valueOf() - (todaysDate - 604800000)) / (1000 * 60 * 60 * 24)
 
-        const recentData = await getRecentData(state.latitude!, state.longitude!);
+        const recentData = await getRecentData(inputState.latitude!, inputState.longitude!);
 
         recentData.daily.time.forEach((k: string, i: number) => {
-            if (new Date(k).valueOf() < new Date(state.startDate).valueOf() || new Date(k).valueOf() > new Date(state.endDate).valueOf()) { // ignore the fetched data before the start date
+            if (new Date(k).valueOf() < new Date(inputState.startDate).valueOf() || new Date(k).valueOf() > new Date(inputState.endDate).valueOf()) { // ignore the fetched data before the start date
                 return
             }
             const index = (-(offset + 1)) + i
@@ -69,21 +69,21 @@ export async function getOpenMeteoData(state: formState, setState: React.Dispatc
         showTargetWeek: false,
         currentVisMode: visualizationModes.Interval,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `Daily Data between ${state.startDate} and ${state.endDate}.`
+        formTitle: `Daily Data between ${inputState.startDate} and ${inputState.endDate}.`
     })
 }
 
 
-export async function getDateHistory(state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
+export async function getDateHistory(inputState: inputState, state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
     const now = Date.now()
     const todaysDate = now - (now % 86400000)
     // First get the historical data
-    const msg = await getHistoricalData(state.latitude!, state.longitude!, state.startDate, state.endDate);
+    const msg = await getHistoricalData(inputState.latitude!, inputState.longitude!, inputState.startDate, inputState.endDate);
 
     let min: any = [], max: any = [], mean: any = [], prec: any = []
 
     msg.daily.time.forEach((k: string, i: number) => {
-        if (k.slice(5) === state.targetDate.slice(5)) {
+        if (k.slice(5) === inputState.targetDate.slice(5)) {
             min.push({ x: new Date(k), y: parseFloat(msg.daily.temperature_2m_min[i]) })
             max.push({ x: new Date(k), y: parseFloat(msg.daily.temperature_2m_max[i]) })
             mean.push({ x: new Date(k), y: parseFloat(msg.daily.temperature_2m_mean[i]) })
@@ -92,11 +92,11 @@ export async function getDateHistory(state: formState, setState: React.Dispatch<
     });
 
     // Now if the end date is more recent than 7 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate - new Date(state.endDate).valueOf() <= 604800000) {
-        const recentData = await getRecentData(state.latitude!, state.longitude!);
+    if (todaysDate - new Date(inputState.endDate).valueOf() <= 604800000) {
+        const recentData = await getRecentData(inputState.latitude!, inputState.longitude!);
         // add the recent data which will be the last entry of the arrays filled before
         recentData.daily.time.forEach((k: string, i: number) => {
-            if (k.slice(5) === state.targetDate.slice(5)) {
+            if (k.slice(5) === inputState.targetDate.slice(5)) {
                 min.at(-1).y = parseFloat(recentData.daily.temperature_2m_min[i])
                 max.at(-1).y = parseFloat(recentData.daily.temperature_2m_max[i])
                 // for forecast data we approximate the mean, which yields okay errors at daily measures (~1C)
@@ -119,31 +119,32 @@ export async function getDateHistory(state: formState, setState: React.Dispatch<
         showTargetWeek: false,
         currentVisMode: visualizationModes.DateHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `History of ${state.targetDate.slice(5)} between ${state.startDate} and ${state.endDate}.`
+        formTitle: `History of ${inputState.targetDate.slice(5)} between ${inputState.startDate} and ${inputState.endDate}.`
     })
 }
 
-export async function getWeekHistory(state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
+export async function getWeekHistory(inputState: inputState, state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
     const now = Date.now()
     const todaysDate = now - (now % 86400000)
     // First get the historical data
-    const msg = await getHistoricalData(state.latitude!, state.longitude!, state.startDate, state.endDate);
+    const msg = await getHistoricalData(inputState.latitude!, inputState.longitude!, inputState.startDate, inputState.endDate);
 
     let min: any = [], max: any = [], mean: any = [], prec: any = []
 
     // get target week 
-    const targetWeek = getWeekNumber(new Date(state.targetDate))[1]
+    const targetWeek = getWeekNumber(new Date(inputState.targetDate))[1]
 
     for (let i = 0; i < msg.daily.time.length; i++) {
         const k = msg.daily.time[i]
         const weekInfo = getWeekNumber(new Date(k));
         if (weekInfo[1] === targetWeek) {
-            let weekMinData = [], weekMaxData = [], weekMeanData = []
+            let weekMinData = [], weekMaxData = [], weekMeanData = [], weekPrecData = []
             for (let j = i; j < i + 7; j++) {
                 if (msg.daily.temperature_2m_min[j]) { // check if there is data. if not we just take the available data
                     weekMinData.push(parseFloat(msg.daily.temperature_2m_min[j]))
                     weekMaxData.push(parseFloat(msg.daily.temperature_2m_max[j]))
                     weekMeanData.push(parseFloat(msg.daily.temperature_2m_mean[j]))
+                    weekPrecData.push(parseFloat(msg.daily.precipitation_sum[j]))
                 }
             }
             i = i + 363
@@ -153,15 +154,16 @@ export async function getWeekHistory(state: formState, setState: React.Dispatch<
             max.push({ x: xVal, y: Math.max(...weekMaxData) })
             //mean.push({ x: xVal, y: (avg || undefined) })
             mean.push({ x: xVal, y: weekMeanData })
+            prec.push({ x: xVal, y: weekPrecData })
         }
     }
 
     // Now if the end date is more recent than 7 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate - new Date(state.endDate).valueOf() <= 604800000) {
-        const recentData = await getRecentData(state.latitude!, state.longitude!);
+    if (todaysDate - new Date(inputState.endDate).valueOf() <= 604800000) {
+        const recentData = await getRecentData(inputState.latitude!, inputState.longitude!);
         // add the recent data which will be the last entry of the arrays filled before
         recentData.daily.time.forEach((k: string, i: number) => {
-            if (new Date(k).valueOf() < new Date(state.startDate).valueOf()) {
+            if (new Date(k).valueOf() < new Date(inputState.startDate).valueOf()) {
                 return;
             }
             const weekInfo = getWeekNumber(new Date(k));
@@ -171,6 +173,7 @@ export async function getWeekHistory(state: formState, setState: React.Dispatch<
                 max.at(-1).y = Math.max(max.at(-1).y, parseFloat(recentData.daily.temperature_2m_max[i]))
                 // approximate forecast mean data
                 mean.at(-1).y.push((max.at(-1).y + min.at(-1).y) / 2)
+                prec.at(-1).y.push(parseFloat(recentData.daily.precipitation_sum[i]))
             }
         });
     }
@@ -187,7 +190,7 @@ export async function getWeekHistory(state: formState, setState: React.Dispatch<
 
     setState({
         ...state,
-        tempData: [max, mean, min],
+        tempData: [max, mean, min, prec],
         tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
@@ -195,15 +198,15 @@ export async function getWeekHistory(state: formState, setState: React.Dispatch<
         showTargetWeek: true,
         currentVisMode: visualizationModes.WeekHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `History of Calender Week ${targetWeek} between ${state.startDate} and ${state.endDate}.`
+        formTitle: `History of Calender Week ${targetWeek} between ${inputState.startDate} and ${inputState.endDate}.`
     })
 }
 
-export async function getMonthHistory(state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
+export async function getMonthHistory(inputState: inputState, state: formState, setState: React.Dispatch<React.SetStateAction<formState>>) {
     const now = Date.now()
     const todaysDate = now - (now % 86400000)
     // First get the historical data
-    const msg = await getHistoricalData(state.latitude!, state.longitude!, state.startDate, state.endDate);
+    const msg = await getHistoricalData(inputState.latitude!, inputState.longitude!, inputState.startDate, inputState.endDate);
 
     let min: any = [], max: any = [], mean: any = [], prec: any = []
 
@@ -211,7 +214,7 @@ export async function getMonthHistory(state: formState, setState: React.Dispatch
         const k = msg.daily.time[i]
         const month = k.slice(5).slice(0, -3);
         const year = new Date(k).getFullYear()
-        if (month === (state.targetDate.slice(5).slice(0, -3))) {
+        if (month === (inputState.targetDate.slice(5).slice(0, -3))) {
             //check if we already have an entry for this month else create a new one
             if (min.length === 0 || min.at(-1)?.x !== year) {
                 const xVal = year
@@ -230,12 +233,12 @@ export async function getMonthHistory(state: formState, setState: React.Dispatch
     }
 
     // Now if the end date is more recent than 7 days ago, also fetch the forecast data for the more recent dates
-    if (todaysDate - new Date(state.endDate).valueOf() <= 604800000) {
-        const recentData = await getRecentData(state.latitude!, state.longitude!);
+    if (todaysDate - new Date(inputState.endDate).valueOf() <= 604800000) {
+        const recentData = await getRecentData(inputState.latitude!, inputState.longitude!);
         // add the recent data which will be the last entry of the arrays filled before
         recentData.daily.time.forEach((k: string, i: number) => {
             const month = k.slice(5).slice(0, -3);
-            if (month == (state.targetDate.slice(5).slice(0, -3))) {
+            if (month == (inputState.targetDate.slice(5).slice(0, -3))) {
                 // We only take the values of they are bigger/smaller than the ones we found so far
                 min.at(-1).y = Math.min(min.at(-1).y, parseFloat(recentData.daily.temperature_2m_min[i]))
                 max.at(-1).y = Math.max(max.at(-1).y, parseFloat(recentData.daily.temperature_2m_max[i]))
@@ -266,7 +269,7 @@ export async function getMonthHistory(state: formState, setState: React.Dispatch
         showTargetWeek: true,
         currentVisMode: visualizationModes.MonthHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `History of Month ${state.targetDate.slice(5).slice(0, -3)} between ${state.startDate} and ${state.endDate}.`
+        formTitle: `History of Month ${inputState.targetDate.slice(5).slice(0, -3)} between ${inputState.startDate} and ${inputState.endDate}.`
     })
 }
 

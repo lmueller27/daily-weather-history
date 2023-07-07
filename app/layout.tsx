@@ -1,7 +1,6 @@
 import './globals.css'
 import { Roboto } from 'next/font/google'
 import styles from './layout.module.css';
-import Navbar from './components/navbar';
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -9,8 +8,8 @@ const roboto = Roboto({
 })
 
 export const metadata = {
-  title: 'ITHTU?',
-  description: 'Compare historical temperatures',
+  title: 'Daily Weather History',
+  description: 'Visualize and compare historical weather data for any geolocation.',
 }
 
 export default function RootLayout({

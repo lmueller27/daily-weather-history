@@ -6,13 +6,15 @@ export type weatherPoint = {
     y: number;
 }
 
-export interface formState {
+export interface inputState {
     latitude: number|undefined,
     longitude: number|undefined,
     targetDate: string,
-    targetWeek: string,
     startDate: string,
     endDate: string,
+}
+
+export interface formState {
     tempData: Array<Array<weatherPoint>>,
     tempDataMedian: [],
     tempDataMean: [],

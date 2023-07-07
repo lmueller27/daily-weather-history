@@ -1,11 +1,11 @@
 import { faChevronDown, faChevronUp, faLocationDot, faMapLocation, faMapLocationDot } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Draggable, Map, Point } from "pigeon-maps"
-import { formState, myColors } from "../shared/utils"
+import { inputState, myColors } from "../shared/utils"
 import { useRef, useState } from "react"
 import styles from './form.module.css'
 
-export default function CollapsibleMap({ state, setState, center, setCenter }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>>, center: [number, number], setCenter: React.Dispatch<React.SetStateAction<[number, number]>> }) {
+export default function CollapsibleMap({ inputState, setInputState, center, setCenter }: { inputState: inputState, setInputState: React.Dispatch<React.SetStateAction<inputState>>, center: [number, number], setCenter: React.Dispatch<React.SetStateAction<[number, number]>> }) {
 
     const [zoom, setZoom] = useState(11)
     const [mapOpen, setMapOpen] = useState(true);
@@ -13,22 +13,23 @@ export default function CollapsibleMap({ state, setState, center, setCenter }: {
     const mapRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div>
-            <button type="button" onClick={() => setMapOpen(!mapOpen)}>{mapOpen ? <p><FontAwesomeIcon icon={faChevronUp} color={myColors.IconBlue} /> Collapse Map</p> : <p><FontAwesomeIcon icon={faChevronDown} color={myColors.IconBlue} /> Expand Map <FontAwesomeIcon icon={faMapLocationDot} color={myColors.IconBlue} /></p>}</button>
-            <div ref={mapRef} className={styles.mapSpace} style={mapOpen ? { height: mapRef.current?.scrollHeight + 'px' } : { height: "0px" }}>
+        <div className={styles.mapGroup}>
+            <button className={styles.mapToggleButton} style={mapOpen ? { borderBottomLeftRadius: '0px' } : { borderBottomLeftRadius: '10px' }} type="button" onClick={() => setMapOpen(!mapOpen)}>{mapOpen ? <p><FontAwesomeIcon icon={faChevronUp} color={myColors.IconBlue} /> Collapse Map</p> : <p><FontAwesomeIcon icon={faChevronDown} color={myColors.IconBlue} /> Expand Map <FontAwesomeIcon icon={faMapLocationDot} color={myColors.IconBlue} /></p>}</button>
+            <div ref={mapRef} className={styles.mapSpace} style={mapOpen ? { height: '300px' } : { height: "25px" }}>
                 <Map
                     height={300}
                     defaultCenter={[50.8, 6.10]}
                     defaultZoom={11}
                     center={center}
                     zoom={zoom}
+                    mouseEvents={mapOpen}
                     onClick={({ latLng }) => updateMarker(latLng)}
                     onBoundsChanged={({ center, zoom }) => {
                         setCenter(center)
                         setZoom(zoom)
                     }}>
-                    <Draggable offset={[6, 20]} anchor={[Number(state.latitude), Number(state.longitude)]} onDragEnd={updateMarker}>
-                        {(!Number.isNaN(state.latitude) && !Number.isNaN(state.longitude)) && (state.latitude != undefined && state.longitude != undefined) ?
+                    <Draggable offset={[6, 20]} anchor={[Number(inputState.latitude), Number(inputState.longitude)]} onDragEnd={updateMarker}>
+                        {(!Number.isNaN(inputState.latitude) && !Number.isNaN(inputState.longitude)) && (inputState.latitude != undefined && inputState.longitude != undefined) ?
                             <FontAwesomeIcon icon={faLocationDot} color={myColors.IconBlue} /> : null}
                     </Draggable>
                 </Map>
@@ -37,6 +38,6 @@ export default function CollapsibleMap({ state, setState, center, setCenter }: {
     )
 
     function updateMarker(anchor: Point) {
-        setState({ ...state, latitude: anchor[0], longitude: anchor[1] })
+        setInputState({ ...inputState, latitude: anchor[0], longitude: anchor[1] })
     }
 }
