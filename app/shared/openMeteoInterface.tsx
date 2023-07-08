@@ -1,5 +1,5 @@
-import { formState, getWeekNumber, inputState, median, visualizationModes } from "./utils";
-
+import { formState, getWeekNumber, inputState, median, months, myColors, visualizationModes } from "./utils";
+import styles from '../components/form.module.css'
 /**
  * 
  * @returns Historical data for the current state of the form 
@@ -69,7 +69,16 @@ export async function getOpenMeteoData(inputState: inputState, state: formState,
         showTargetWeek: false,
         currentVisMode: visualizationModes.Interval,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `Daily Data between ${inputState.startDate} and ${inputState.endDate}.`
+        //formTitle: `Daily Data between ${inputState.startDate} and ${inputState.endDate}.`
+        formTitle: <div className={styles.formTitle}><h1>Daily Data between&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.startDate}&nbsp;
+            </p>and&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.endDate}
+            </p>.
+        </h1>
+        </div>
     })
 }
 
@@ -119,7 +128,20 @@ export async function getDateHistory(inputState: inputState, state: formState, s
         showTargetWeek: false,
         currentVisMode: visualizationModes.DateHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `History of ${inputState.targetDate.slice(5)} between ${inputState.startDate} and ${inputState.endDate}.`
+        //formTitle: `History of ${inputState.targetDate.slice(5)} between ${inputState.startDate} and ${inputState.endDate}.`
+        formTitle: <div className={styles.formTitle}><h1>History of&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.targetDate.slice(5)}&nbsp;
+            </p>
+            between&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.startDate}&nbsp;
+            </p>and&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.endDate}
+            </p>.
+        </h1>
+        </div>
     })
 }
 
@@ -198,7 +220,20 @@ export async function getWeekHistory(inputState: inputState, state: formState, s
         showTargetWeek: true,
         currentVisMode: visualizationModes.WeekHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `History of Calender Week ${targetWeek} between ${inputState.startDate} and ${inputState.endDate}.`
+        //formTitle: `History of Calender Week ${targetWeek} between ${inputState.startDate} and ${inputState.endDate}.`
+        formTitle: <div className={styles.formTitle}><h1>History of Calender Week&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {targetWeek}&nbsp;
+            </p>
+            between&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.startDate}&nbsp;
+            </p>and&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.endDate}
+            </p>.
+        </h1>
+        </div>
     })
 }
 
@@ -269,7 +304,20 @@ export async function getMonthHistory(inputState: inputState, state: formState, 
         showTargetWeek: true,
         currentVisMode: visualizationModes.MonthHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
-        formTitle: `History of Month ${inputState.targetDate.slice(5).slice(0, -3)} between ${inputState.startDate} and ${inputState.endDate}.`
+        //formTitle: `History of Month ${months[Number(inputState.targetDate.slice(5).slice(0, -3))]} between ${inputState.startDate} and ${inputState.endDate}.`,
+        formTitle: <div className={styles.formTitle}><h1>History of Month&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {months[Number(inputState.targetDate.slice(5).slice(0, -3))]}&nbsp;
+            </p>
+            between&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.startDate}&nbsp;
+            </p>and&nbsp;
+            <p className={styles.highlightText} style={{ color: myColors.IconBlue }}>
+                {inputState.endDate}
+            </p>.
+        </h1>
+        </div>
     })
 }
 

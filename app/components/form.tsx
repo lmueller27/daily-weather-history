@@ -38,7 +38,7 @@ export default function Form(props: any) {
         keepCrosshair: false,
         showTargetDate: false,
         showTargetWeek: false,
-        formTitle: 'Select a visualization',
+        formTitle: <h1>Select a visualization</h1>,
         formGeoString: '',
         currentVisMode: null,
     })
@@ -63,10 +63,10 @@ export default function Form(props: any) {
       }, [inputState])
 
     return (
-        <div className={styles.form}>
+        <div className={styles.form} >
             <InputSpace inputState={inputState} setInputState={setInputState} />
             <GenerateButtons state={state} setState={setState} inputState={inputState}/>
-            <h1>{state.formTitle}</h1>
+            {state.formTitle}
             <p>{state.formGeoString}</p>
             <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in.</h4>
             <AutoSizer disableHeight>

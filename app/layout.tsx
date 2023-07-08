@@ -1,8 +1,13 @@
 import './globals.css'
-import { Roboto } from 'next/font/google'
+import { Barlow, Montserrat, Roboto } from 'next/font/google'
 import styles from './layout.module.css';
 
 const roboto = Roboto({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+})
+
+const montserrat = Montserrat({
   weight: ['400', '700'],
   subsets: ['latin'],
 })
@@ -19,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html className={styles.container} lang="en">
-      <body className={roboto.className}>
+      <body className={montserrat.className}>
         {children}
       </body>
     </html>

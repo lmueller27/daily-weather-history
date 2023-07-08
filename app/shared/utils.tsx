@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 /**
  * The type we use to mark a data point in a weather data series. x is the date and y a temperature measurement
  */
@@ -29,7 +31,7 @@ export interface formState {
     keepCrosshair: boolean,
     showTargetDate: boolean,
     showTargetWeek: boolean,
-    formTitle: string,
+    formTitle: ReactElement<any, any>,
     formGeoString: string,
     currentVisMode: visualizationModes | null,
 }
@@ -47,6 +49,21 @@ export enum myColors {
     Green = '#3ba365',
     Yellow = '#f5bc51',
     IconBlue = "#0070f3"
+}
+
+export enum months {
+    January = 1,
+    Feburary = 2,
+    March = 3,
+    April = 4,
+    May = 5,
+    June = 6,
+    July = 7,
+    August = 8,
+    September = 9,
+    October = 10,
+    November = 11,
+    December = 12,
 }
 
 /**

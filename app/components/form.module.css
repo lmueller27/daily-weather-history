@@ -3,7 +3,10 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    padding: 5rem;
+    padding-top: 3rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    padding-bottom: 3rem;
     gap: 1rem;
 }
 
@@ -147,6 +150,7 @@
     border-radius: 10px;
     border-color: lightslategray;
     padding: 0.1rem;
+    padding-left: .3rem;
 }
 
 .settingForm input[type="number"] {
@@ -168,4 +172,12 @@
 .addButton:hover {
     background-color:forestgreen;
     color: white;
+}
+
+.formTitle {
+    white-space:nowrap;
+}
+
+.highlightText {
+    display:inline-block;
 }

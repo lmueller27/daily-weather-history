@@ -1,5 +1,4 @@
 
-import Form from "./components/form";
 import FormComparer from "./components/formComparer";
 import Layout from "./layout";
 
