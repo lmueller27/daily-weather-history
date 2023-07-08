@@ -1,5 +1,5 @@
 import { DiscreteColorLegend } from "react-vis";
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 import { formState, myColors } from "../shared/utils";
 
 export default function FormLegend({ width, state, setState }: { width: number, state: formState, setState: React.Dispatch<React.SetStateAction<formState>> }) {

@@ -1,6 +1,6 @@
-import './globals.css'
+import './styles/globals.css'
 import { Barlow, Montserrat, Roboto } from 'next/font/google'
-import styles from './layout.module.css';
+import styles from './styles/layout.module.css';
 
 const roboto = Roboto({
   weight: ['400', '700'],

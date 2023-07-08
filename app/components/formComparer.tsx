@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Form from "./form"
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 
 export default function FormComparer() {
     const [activeForms, setForms] = useState([0])

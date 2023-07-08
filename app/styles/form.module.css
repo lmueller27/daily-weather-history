@@ -19,6 +19,7 @@
     padding: 1rem;
     background-color: rgba(240, 248, 255, 0.656);
     border-radius: 25px;
+    overflow-x:visible;
 }
 
 .form h1 {
@@ -138,7 +139,7 @@
 }
 
 .settingForm {
-    display: flex;
+    display:inline-flex;
     flex-direction: row;
     justify-content: left;
     gap: 1rem;
@@ -180,4 +181,12 @@
 
 .highlightText {
     display:inline-block;
+}
+
+@media only screen and (max-width: 825px) {
+
+    .settingForm {
+        display: grid;
+        grid-template: "a a a" 40px            "b c c" 40px            "b c c" 40px / 1fr 1fr 1fr;
+    }
 }

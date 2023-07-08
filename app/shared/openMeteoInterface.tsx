@@ -1,5 +1,5 @@
 import { formState, getWeekNumber, inputState, median, months, myColors, visualizationModes } from "./utils";
-import styles from '../components/form.module.css'
+import styles from '../styles/form.module.css'
 /**
  * 
  * @returns Historical data for the current state of the form 

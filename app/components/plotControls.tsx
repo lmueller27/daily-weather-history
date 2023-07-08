@@ -1,4 +1,4 @@
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 import FormLegend from './legend'
 import { formState } from '../shared/utils'
 

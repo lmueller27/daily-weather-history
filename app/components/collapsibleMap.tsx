@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Draggable, Map, Point } from "pigeon-maps"
 import { inputState, myColors } from "../shared/utils"
 import { useRef, useState } from "react"
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 
 export default function CollapsibleMap({ inputState, setInputState, center, setCenter }: { inputState: inputState, setInputState: React.Dispatch<React.SetStateAction<inputState>>, center: [number, number], setCenter: React.Dispatch<React.SetStateAction<[number, number]>> }) {
 

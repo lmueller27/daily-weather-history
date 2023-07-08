@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import '../../node_modules/react-vis/dist/style.css';
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { formState, getWeekNumber, inputState, visualizationModes } from "../shared/utils";
 import { WeatherPlot } from "./weatherPlot";

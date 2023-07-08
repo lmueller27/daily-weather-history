@@ -2,7 +2,7 @@ import { AreaSeries, Crosshair, DecorativeAxis, Highlight, HighlightArea, Horizo
 import { formState, myColors } from "../shared/utils";
 import { leastSquaresLinearRegression } from "../shared/mathHelpers";
 import { useState } from "react";
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 
 export function WeatherPlot({ state, setState, width }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>>, width: any }) {
     const [lastDrawLocation, setLastDrawLocation] = useState<HighlightArea | null>(null)

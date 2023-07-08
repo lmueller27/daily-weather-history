@@ -1,6 +1,6 @@
 import { getDateHistory, getMonthHistory, getOpenMeteoData, getWeekHistory } from "../shared/openMeteoInterface";
 import { formState, inputState, visualizationModes } from "../shared/utils";
-import styles from './form.module.css'
+import styles from '../styles/form.module.css'
 
 export function GenerateButtons({ state, setState, inputState }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>>, inputState: inputState }) {
     return (
