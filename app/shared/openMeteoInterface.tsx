@@ -65,8 +65,6 @@ export async function getOpenMeteoData(inputState: inputState, state: formState,
         tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
-        showTargetDate: false,
-        showTargetWeek: false,
         currentVisMode: visualizationModes.Interval,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
         //formTitle: `Daily Data between ${inputState.startDate} and ${inputState.endDate}.`
@@ -124,8 +122,6 @@ export async function getDateHistory(inputState: inputState, state: formState, s
         tempDataMean: mean.map((e: any) => { return { x: e.x, y: (avg || 0) } }),
         crosshairValues: [],
         keepCrosshair: false,
-        showTargetDate: true,
-        showTargetWeek: false,
         currentVisMode: visualizationModes.DateHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
         //formTitle: `History of ${inputState.targetDate.slice(5)} between ${inputState.startDate} and ${inputState.endDate}.`
@@ -169,14 +165,15 @@ export async function getWeekHistory(inputState: inputState, state: formState, s
                     weekPrecData.push(parseFloat(msg.daily.precipitation_sum[j]))
                 }
             }
-            i = i + 363
-
-            const xVal = weekInfo[0]
+            const xVal = new Date(k)
+            //const xVal = weekInfo[0]
             min.push({ x: xVal, y: Math.min(...weekMinData) })
             max.push({ x: xVal, y: Math.max(...weekMaxData) })
             //mean.push({ x: xVal, y: (avg || undefined) })
             mean.push({ x: xVal, y: weekMeanData })
             prec.push({ x: xVal, y: weekPrecData })
+
+            i = i + 363
         }
     }
 
@@ -216,8 +213,6 @@ export async function getWeekHistory(inputState: inputState, state: formState, s
         tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
-        showTargetDate: false,
-        showTargetWeek: true,
         currentVisMode: visualizationModes.WeekHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
         //formTitle: `History of Calender Week ${targetWeek} between ${inputState.startDate} and ${inputState.endDate}.`
@@ -247,12 +242,14 @@ export async function getMonthHistory(inputState: inputState, state: formState, 
 
     for (let i = 0; i < msg.daily.time.length; i++) {
         const k = msg.daily.time[i]
+        const date = new Date(k)
         const month = k.slice(5).slice(0, -3);
-        const year = new Date(k).getFullYear()
+        const year = date.getFullYear()
         if (month === (inputState.targetDate.slice(5).slice(0, -3))) {
             //check if we already have an entry for this month else create a new one
-            if (min.length === 0 || min.at(-1)?.x !== year) {
-                const xVal = year
+            if (min.length === 0 || min.at(-1)?.x.getFullYear() !== year) {
+                const xVal = date
+                //const xVal = year
                 min.push({ x: xVal, y: parseFloat(msg.daily.temperature_2m_min[i]) || Infinity })
                 max.push({ x: xVal, y: parseFloat(msg.daily.temperature_2m_max[i] || -Infinity) })
                 mean.push({ x: xVal, y: [parseFloat(msg.daily.temperature_2m_mean[i])] })
@@ -300,8 +297,6 @@ export async function getMonthHistory(inputState: inputState, state: formState, 
         tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
-        showTargetDate: false,
-        showTargetWeek: true,
         currentVisMode: visualizationModes.MonthHistory,
         formGeoString: `for ${msg.latitude.toFixed(2)}˚N ${msg.longitude.toFixed(2)}˚E at ${msg.elevation}m above sea level`,
         //formTitle: `History of Month ${months[Number(inputState.targetDate.slice(5).slice(0, -3))]} between ${inputState.startDate} and ${inputState.endDate}.`,

@@ -32,10 +32,9 @@ export default function Form(props: any) {
     })
 
     const [state, setState] = useState<formState>({
-        tempData: [[{ x: null, y: 0 }], [{ x: null, y: 0 }], [{ x: null, y: 0 }], [{ x: null, y: 0 }]],
+        tempData: [[{ x: todaysDate, y: 20 }], [{ x: todaysDate, y: 20 }], [{ x: todaysDate, y: 20 }], [{ x: todaysDate, y: 20 }]],
         tempDataMedian: [],
         tempDataMean: [],
-        showHints: true,
         crosshairValues: [],
         showMin: true,
         showMax: true,
@@ -44,8 +43,6 @@ export default function Form(props: any) {
         showPrec: false,
         showTrend: true,
         keepCrosshair: false,
-        showTargetDate: false,
-        showTargetWeek: false,
         formTitle: <h1>Select a visualization</h1>,
         formGeoString: '',
         currentVisMode: null,
@@ -99,15 +96,14 @@ export default function Form(props: any) {
             <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in.</h4>
             <div className={styles.figureSpace}>
                 <div className={styles.graphSpace}>
-                    <AutoSizer disableHeight>
+                    <AutoSizer disableHeight >
                         {({ width }: any) => (
                             <WeatherPlot state={state} setState={setState} width={width} />
-                        )}</AutoSizer>
+                        )}
+                    </AutoSizer>
                 </div>
                 <PlotControls props={props} state={state} setState={setState} width={100} />
             </div>
-
-
         </div >
     )
 
