@@ -1,0 +1,10 @@
+name: merge-changes-into-sandbox
+run-name: merge-changes-into-sandbox
+on: [push]
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: git checkout sandbox
+      - run: git merge main
