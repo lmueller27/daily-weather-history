@@ -33,7 +33,6 @@ export default function FormLegend({ width, state, setState }: { width: number, 
   return (
     <DiscreteColorLegend
       className={styles.formLegend}
-      width={width * 0.15}
       items={ITEMS}
       onItemClick={item => _clickHandler(item)} />
   )

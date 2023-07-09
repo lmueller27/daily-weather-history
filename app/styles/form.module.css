@@ -3,23 +3,21 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    padding-top: 3rem;
-    padding-left: 5rem;
-    padding-right: 5rem;
-    padding-bottom: 3rem;
+    padding-top: 3vh;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-bottom: 3vh;
     gap: 1rem;
 }
 
 .form {
     width: 100%;
-    
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     padding: 1rem;
     background-color: rgba(240, 248, 255, 0.656);
     border-radius: 25px;
-    overflow-x:visible;
 }
 
 .form h1 {
@@ -86,6 +84,11 @@
     gap: 1rem;
 }
 
+.graphSpace {
+    flex: 1;
+    height: 100%
+}
+
 .figureControls {
     display: flex;
     flex-direction: column;
@@ -138,8 +141,14 @@
     padding-bottom: 0.5rem;
 }
 
+.settings {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
 .settingForm {
-    display:inline-flex;
+    display:flex;
     flex-direction: row;
     justify-content: left;
     gap: 1rem;
@@ -154,12 +163,23 @@
     padding-left: .3rem;
 }
 
+.settingForm input[data-valid='false']{
+    border: 0.5px solid;
+    border-radius: 10px;
+    border-color: crimson;
+    background-color: rgba(220, 20, 60, 0.25);
+}
+
 .settingForm input[type="number"] {
     width: 7em;
   }
 
 .settingForm label {
     padding-top: 0.2rem;
+}
+
+.intervalInput {
+    display: inline-flex;
 }
 
 .addButton {
@@ -185,8 +205,12 @@
 
 @media only screen and (max-width: 825px) {
 
-    .settingForm {
-        display: grid;
-        grid-template: "a a a" 40px            "b c c" 40px            "b c c" 40px / 1fr 1fr 1fr;
+    .settings {
+        flex-direction: column;
+        gap: 0rem;
+    }
+    
+    .figureSpace {
+        flex-direction: column;
     }
 }

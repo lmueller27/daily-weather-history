@@ -9,7 +9,7 @@ export function WeatherPlot({ state, setState, width }: { state: formState, setS
     return (
         <XYPlot
             height={400}
-            width={width * 0.8}
+            width={width}
             animation={false}
             xType={state.showTargetWeek ? "linear" : 'time'}
             onClick={() => setState({ ...state, keepCrosshair: !state.keepCrosshair })}

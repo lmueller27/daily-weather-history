@@ -8,6 +8,14 @@ export type weatherPoint = {
     y: number;
 }
 
+export type inputValidation = {
+    lat: boolean,
+    long: boolean,
+    target: boolean,
+    start: boolean,
+    end: boolean,
+}
+
 export interface inputState {
     latitude: number|undefined,
     longitude: number|undefined,
@@ -93,6 +101,9 @@ export function getWeekNumber(d: Date) {
 }
 
 export const median = (arr: any) => {
+    if (arr.length <= 2) {
+        return NaN;
+    }
     const mid = Math.floor(arr.length / 2),
         nums = [...arr].sort((a, b) => a.y - b.y);
     return arr.length % 2 !== 0 ? nums[mid] : nums[mid + 1];

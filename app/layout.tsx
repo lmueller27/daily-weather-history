@@ -12,6 +12,11 @@ const montserrat = Montserrat({
   subsets: ['latin'],
 })
 
+const barlow = Barlow({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+})
+
 export const metadata = {
   title: 'Daily Weather History',
   description: 'Visualize and compare historical weather data for any geolocation.',
@@ -24,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html className={styles.container} lang="en">
-      <body className={montserrat.className}>
+      <body className={barlow.className}>
         {children}
       </body>
     </html>

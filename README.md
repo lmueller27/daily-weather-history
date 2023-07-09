@@ -11,7 +11,13 @@ This is a [Next.js](https://nextjs.org/) app using [React-Vis](https://uber.gith
 
 ## Try it out
 
-Clone the repo and run the development server:
+Clone the repo and install the dependencies:
+
+```bash
+npm install --legacy-peer-deps
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
