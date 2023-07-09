@@ -10,5 +10,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: my-branch
+          ref: sandbox
       - run: git merge main
