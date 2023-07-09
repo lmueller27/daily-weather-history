@@ -1,0 +1,23 @@
+name: merge-changes-into-sandbox
+run-name: merge-changes-into-sandbox
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: sandbox
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Merge main to sandbox
+        run: |
+          git fetch --unshallow
+          git pull
+          git merge --no-ff origin/main -m "Auto-merge main back to sandbox"
+          git push
