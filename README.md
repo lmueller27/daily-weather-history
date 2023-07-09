@@ -11,7 +11,9 @@ This is a [Next.js](https://nextjs.org/) app using [React-Vis](https://uber.gith
 
 ## Try it out
 
-Clone the repo and install the dependencies:
+You can try the app [here](https://codesandbox.io/p/github/lmueller27/daily-weather-history/sandbox) in a sandbox.
+
+To run it locally, clone the repo and install the dependencies:
 
 ```bash
 npm install --legacy-peer-deps
