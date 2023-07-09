@@ -1,5 +1,5 @@
 import { AreaSeries, Crosshair, DecorativeAxis, Highlight, HighlightArea, HorizontalGridLines, LineSeries, MarkSeries, VerticalBarSeries, XAxis, XYPlot, YAxis } from "react-vis";
-import { formState, myColors } from "../shared/utils";
+import { formState, getWeekNumber, months, myColors, visualizationModes } from "../shared/utils";
 import { leastSquaresLinearRegression } from "../shared/mathHelpers";
 import { useState } from "react";
 import styles from '../styles/form.module.css'
@@ -11,7 +11,7 @@ export function WeatherPlot({ state, setState, width }: { state: formState, setS
             height={400}
             width={width}
             animation={false}
-            xType={state.showTargetWeek ? "linear" : 'time'}
+            xType={'time'}
             onClick={() => setState({ ...state, keepCrosshair: !state.keepCrosshair })}
             onMouseLeave={(): void => { !state.keepCrosshair ? setState({ ...state, crosshairValues: [] }) : null }}
             xDomain={
@@ -38,6 +38,18 @@ export function WeatherPlot({ state, setState, width }: { state: formState, setS
             {state.crosshairValues[0] ? <Crosshair className={styles.test}
                 values={state.crosshairValues}
                 style={{box:{background: 'rgba(80, 80, 80, 0.8)'}}}
+                titleFormat={(d) => {
+                    if (state.currentVisMode===visualizationModes.MonthHistory){
+                        return {title: 'x', value:`${d[0].x.getFullYear()} ${months[d[0].x.getMonth()+1]}`}
+                    }
+                    else if (state.currentVisMode===visualizationModes.WeekHistory) {
+                        const weekInfo = getWeekNumber(d[0].x)
+                        return {title: 'x', value: `${weekInfo[0]}-W${weekInfo[1]}`}
+                    }
+                    else {
+                        return {title: 'x', value:d[0].x.toDateString()};
+                    }
+                }}
                 itemsFormat={(d) => [{ title: 'max', value: d[0].y }, { title: 'mean', value: d[1].y }, { title: 'min', value: d[2].y }]}>
             </Crosshair> : null}
             {state.crosshairValues.length === 0 ? null : <MarkSeries

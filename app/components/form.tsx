@@ -35,7 +35,6 @@ export default function Form(props: any) {
         tempData: [[{ x: null, y: 0 }], [{ x: null, y: 0 }], [{ x: null, y: 0 }], [{ x: null, y: 0 }]],
         tempDataMedian: [],
         tempDataMean: [],
-        showHints: true,
         crosshairValues: [],
         showMin: true,
         showMax: true,
@@ -44,8 +43,6 @@ export default function Form(props: any) {
         showPrec: false,
         showTrend: true,
         keepCrosshair: false,
-        showTargetDate: false,
-        showTargetWeek: false,
         formTitle: <h1>Select a visualization</h1>,
         formGeoString: '',
         currentVisMode: null,
@@ -106,8 +103,6 @@ export default function Form(props: any) {
                 </div>
                 <PlotControls props={props} state={state} setState={setState} width={100} />
             </div>
-
-
         </div >
     )
 
