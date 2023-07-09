@@ -14,7 +14,6 @@ jobs:
       - name: Merge main to sandbox
         run: |
           git fetch --unshallow
-          git checkout sandbox
           git pull
-          git merge --no-ff main -m "Auto-merge main back to sandbox"
+          git merge --no-ff origin/main -m "Auto-merge main back to sandbox"
           git push
