@@ -19,7 +19,7 @@ export default function Form(props: any) {
         latitude: undefined,
         longitude: undefined,
         targetDate: todaysDate.toISOString().slice(0, -14),
-        startDate: new Date('1940-01-01').toISOString().slice(0, -14),
+        startDate: '1940-01-01',
         endDate: todaysDate.toISOString().slice(0, -14),
     })
 
@@ -52,7 +52,10 @@ export default function Form(props: any) {
     useEffect(() => {
         const triggerCurrentVisMode = async () => {
             let inputCheck = { ...inputValidation };
-            const validInterval = new Date(inputState.startDate).valueOf() < new Date(inputState.endDate).valueOf() && Number(inputState.startDate.slice(0, 4)) >= 1940
+            const validInterval =
+                new Date(inputState.startDate).valueOf() < new Date(inputState.endDate).valueOf()
+                && Number(inputState.startDate.slice(0, 4)) >= 1940
+                && (Date.parse(inputState.endDate) - todaysDate.valueOf() < 0)
 
             inputCheck.lat = !Number.isNaN(inputState.latitude) && inputState.latitude !== undefined
             inputCheck.long = !Number.isNaN(inputState.longitude) && inputState.longitude !== undefined
@@ -62,9 +65,10 @@ export default function Form(props: any) {
             // for the interval mode we dont need to check the target date validity but do need to limit the interval borders
             if (state.currentVisMode === visualizationModes.Interval) {
                 inputCheck.target = true;
-                const ltTenYears = Number(inputState.endDate.slice(0, 4)) - Number(inputState.startDate.slice(0, 4)) <= 10
-                inputCheck.start = ltTenYears
-                inputCheck.end = ltTenYears
+                const ltTenYears =
+                    Number(inputState.endDate.slice(0, 4)) - Number(inputState.startDate.slice(0, 4)) <= 10
+                inputCheck.start = validInterval && ltTenYears
+                inputCheck.end = validInterval && ltTenYears
                 if (Object.values(inputCheck).reduce((a, b) => a && b, true)) {
                     await getOpenMeteoData(inputState, state, setState);
                 }
@@ -90,10 +94,10 @@ export default function Form(props: any) {
     return (
         <div className={styles.form} >
             <InputSpace inputState={inputState} setInputState={setInputState} inputValidation={inputValidation} />
-            <GenerateButtons state={state} setState={setState} inputState={inputState} setInputState={setInputState} inputValidation={inputValidation} setInputValidation={setInputValidation} />
+            <GenerateButtons state={state} setState={setState} inputState={inputState} inputValidation={inputValidation} />
             {state.formTitle}
             <p>{state.formGeoString}</p>
-            <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in.</h4>
+            <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in on a period.</h4>
             <div className={styles.figureSpace}>
                 <div className={styles.graphSpace}>
                     <AutoSizer disableHeight >

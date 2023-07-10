@@ -4,7 +4,12 @@ import { leastSquaresLinearRegression } from "../shared/mathHelpers";
 import { useState } from "react";
 import styles from '../styles/form.module.css'
 
-export function WeatherPlot({ state, setState, width }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>>, width: any }) {
+export function WeatherPlot({ state, setState, width }:
+    {
+        state: formState,
+        setState: React.Dispatch<React.SetStateAction<formState>>,
+        width: any
+    }) {
     const [lastDrawLocation, setLastDrawLocation] = useState<HighlightArea | null>(null)
     return (
         <XYPlot
