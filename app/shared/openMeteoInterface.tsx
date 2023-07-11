@@ -1,4 +1,4 @@
-import { formState, getWeekNumber, inputState, median, months, myColors, visualizationModes } from "./utils";
+import { formState, getWeekNumber, inputState, median, medianY, months, myColors, visualizationModes } from "./utils";
 import styles from '../styles/form.module.css'
 /**
  * 
@@ -62,7 +62,7 @@ export async function getOpenMeteoData(inputState: inputState, state: formState,
     setState({
         ...state,
         tempData: [max, mean, min, prec],
-        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
+        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: medianY(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
         currentVisMode: visualizationModes.Interval,
@@ -118,7 +118,7 @@ export async function getDateHistory(inputState: inputState, state: formState, s
     setState({
         ...state,
         tempData: [max, mean, min, prec],
-        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
+        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: medianY(mean).y } }),
         tempDataMean: mean.map((e: any) => { return { x: e.x, y: (avg || 0) } }),
         crosshairValues: [],
         keepCrosshair: false,
@@ -210,7 +210,7 @@ export async function getWeekHistory(inputState: inputState, state: formState, s
     setState({
         ...state,
         tempData: [max, mean, min, prec],
-        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
+        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: medianY(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
         currentVisMode: visualizationModes.WeekHistory,
@@ -284,17 +284,17 @@ export async function getMonthHistory(inputState: inputState, state: formState, 
     // first filter out the nan values
     mean.forEach((d: any) => {
         d.y = d.y.filter((x: number) => !Number.isNaN((x)))
-        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) / d.y.length).toFixed(2)
+        d.y = Number((d.y.reduce((a: number, b: any) => a + (b || 0), 0) / d.y.length).toFixed(2))
     });
 
     prec.forEach((d: any) => {
-        d.y = (d.y.reduce((a: number, b: any) => a + (b || 0), 0) /*/ d.y.length*/).toFixed(2)
+        d.y = Number((d.y.reduce((a: number, b: any) => a + (b || 0), 0) /*/ d.y.length*/).toFixed(2))
     });
 
     setState({
         ...state,
         tempData: [max, mean, min, prec],
-        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: median(mean).y } }),
+        tempDataMedian: mean.map((e: any) => { return { x: e.x, y: medianY(mean).y } }),
         crosshairValues: [],
         keepCrosshair: false,
         currentVisMode: visualizationModes.MonthHistory,

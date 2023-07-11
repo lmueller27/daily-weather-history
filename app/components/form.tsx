@@ -13,7 +13,6 @@ import { getDateHistory, getMonthHistory, getOpenMeteoData, getWeekHistory } fro
 
 export default function Form(props: any) {
     const todaysDate = new Date()
-    const currentWeek = getWeekNumber(todaysDate)
 
     const [inputState, setInputState] = useState<inputState>({
         latitude: undefined,
