@@ -2,7 +2,11 @@ import { DiscreteColorLegend } from "react-vis";
 import styles from '../styles/form.module.css'
 import { formState, myColors } from "../shared/utils";
 
-export default function FormLegend({ width, state, setState }: { width: number, state: formState, setState: React.Dispatch<React.SetStateAction<formState>> }) {
+export default function FormLegend({ state, setState }:
+  {
+    state: formState,
+    setState: React.Dispatch<React.SetStateAction<formState>>
+  }) {
   const ITEMS = [
     { title: 'Max', color: myColors.Red, disabled: !state.showMax },
     { title: 'Mean', color: myColors.Green, disabled: !state.showMean },

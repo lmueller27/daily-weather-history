@@ -22,7 +22,7 @@ Trends are computed in line with the National Center for Atmospheric Research St
 
 ## Try it out
 
-You can try the app [here](https://codesandbox.io/p/github/lmueller27/daily-weather-history/sandbox) in a sandbox.
+You can try the app in a sandbox: [here](https://codesandbox.io/p/github/lmueller27/daily-weather-history/sandbox).
 
 To run it locally, clone the repo and install the dependencies:
 

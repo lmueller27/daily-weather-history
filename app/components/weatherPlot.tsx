@@ -1,10 +1,15 @@
 import { AreaSeries, Crosshair, DecorativeAxis, Highlight, HighlightArea, HorizontalGridLines, LineSeries, MarkSeries, VerticalBarSeries, XAxis, XYPlot, YAxis } from "react-vis";
 import { formState, getWeekNumber, months, myColors, visualizationModes } from "../shared/utils";
-import { leastSquaresLinearRegression } from "../shared/mathHelpers";
+import { leastSquaresLinearRegression, theilSenEstimation } from "../shared/mathHelpers";
 import { useState } from "react";
 import styles from '../styles/form.module.css'
 
-export function WeatherPlot({ state, setState, width }: { state: formState, setState: React.Dispatch<React.SetStateAction<formState>>, width: any }) {
+export function WeatherPlot({ state, setState, width }:
+    {
+        state: formState,
+        setState: React.Dispatch<React.SetStateAction<formState>>,
+        width: any
+    }) {
     const [lastDrawLocation, setLastDrawLocation] = useState<HighlightArea | null>(null)
     return (
         <XYPlot

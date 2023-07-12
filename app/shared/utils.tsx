@@ -97,11 +97,20 @@ export function getWeekNumber(d: Date) {
     return [d.getUTCFullYear(), res];
 }
 
-export const median = (arr: any) => {
+export const medianY = (arr: weatherPoint[]) => {
+    if (arr.length <= 2) {
+        return {x:null, y:NaN};
+    }
+    const mid = Math.floor((arr.length) / 2),
+        nums = [...arr].sort((a, b) => a.y - b.y);
+    return arr.length % 2 !== 0 ? nums[mid] : {x: null, y: (nums[mid-1].y+nums[mid].y)/2};
+};
+
+export const median = (arr: number[]) => {
     if (arr.length <= 2) {
         return NaN;
     }
-    const mid = Math.floor(arr.length / 2),
-        nums = [...arr].sort((a, b) => a.y - b.y);
-    return arr.length % 2 !== 0 ? nums[mid] : nums[mid + 1];
+    const mid = Math.floor((arr.length) / 2),
+        nums = [...arr].sort((a, b) => a - b);
+    return arr.length % 2 !== 0 ? nums[mid] : (nums[mid-1]+nums[mid])/2;
 };
