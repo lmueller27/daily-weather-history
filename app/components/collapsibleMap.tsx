@@ -18,7 +18,7 @@ export default function CollapsibleMap({ inputState, setInputState, center, setC
     const mapRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div className={styles.mapGroup}>
+        <div className={styles.mapGroup} onClick={()=>{mapOpen?null:setMapOpen(!mapOpen)}}>
             <button
                 className={styles.mapToggleButton}
                 style={mapOpen ? { borderBottomLeftRadius: '0px' } : { borderBottomLeftRadius: '10px' }}
