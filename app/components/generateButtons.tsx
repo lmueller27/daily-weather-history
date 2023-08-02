@@ -2,12 +2,13 @@ import { getDateHistory, getMonthHistory, getOpenMeteoData, getWeekHistory } fro
 import { formState, inputState, inputValidation, visualizationModes } from "../shared/utils";
 import styles from '../styles/form.module.css'
 
-export function GenerateButtons({ state, setState, inputState, inputValidation }:
+export function GenerateButtons({ state, setState, inputState, inputValidation, setLoadingState }:
     {
         state: formState,
         setState: React.Dispatch<React.SetStateAction<formState>>,
         inputState: inputState,
-        inputValidation: inputValidation
+        inputValidation: inputValidation,
+        setLoadingState: React.Dispatch<React.SetStateAction<boolean>>,
     }) {
     return (
         <div className={styles.generateButtons}>
@@ -16,7 +17,11 @@ export function GenerateButtons({ state, setState, inputState, inputValidation }
                 type="button"
                 className={state.currentVisMode === visualizationModes.DateHistory ?
                     styles.activatedMode : undefined}
-                onClick={() => getDateHistory(inputState, state, setState)}
+                onClick={async () => {
+                    setLoadingState(true)
+                    await getDateHistory(inputState, state, setState);
+                    setLoadingState(false)
+                }}
                 disabled={!validateDateInput()}>
                 History of Target Date
             </button>
@@ -24,7 +29,11 @@ export function GenerateButtons({ state, setState, inputState, inputValidation }
                 type="button"
                 className={state.currentVisMode === visualizationModes.WeekHistory ?
                     styles.activatedMode : undefined}
-                onClick={() => getWeekHistory(inputState, state, setState)}
+                onClick={async () => {
+                    setLoadingState(true)
+                    await getWeekHistory(inputState, state, setState);
+                    setLoadingState(false)
+                }}
                 disabled={!validateDateInput()}>
                 History of Target Week
             </button>
@@ -32,7 +41,11 @@ export function GenerateButtons({ state, setState, inputState, inputValidation }
                 type="button"
                 className={state.currentVisMode === visualizationModes.MonthHistory ?
                     styles.activatedMode : undefined}
-                onClick={() => getMonthHistory(inputState, state, setState)}
+                onClick={async () => {
+                    setLoadingState(true)
+                    await getMonthHistory(inputState, state, setState);
+                    setLoadingState(false)
+                }}
                 disabled={!validateDateInput()}>
                 History of Target Month
             </button>
@@ -40,7 +53,11 @@ export function GenerateButtons({ state, setState, inputState, inputValidation }
                 type="button"
                 className={state.currentVisMode === visualizationModes.Interval ?
                     styles.activatedMode : undefined}
-                onClick={() => getOpenMeteoData(inputState, state, setState)}
+                onClick={async () => {
+                    setLoadingState(true)
+                    await getOpenMeteoData(inputState, state, setState);
+                    setLoadingState(false)
+                }}
                 disabled={!validateIntervalInput()}>
                 Whole Interval (max 10 years)
             </button>

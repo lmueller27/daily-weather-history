@@ -4,11 +4,12 @@ import { leastSquaresLinearRegression, theilSenEstimation } from "../shared/math
 import { useState } from "react";
 import styles from '../styles/form.module.css'
 
-export function WeatherPlot({ state, setState, width }:
+export function WeatherPlot({ state, setState, width, loadingState }:
     {
         state: formState,
         setState: React.Dispatch<React.SetStateAction<formState>>,
-        width: any
+        width: any,
+        loadingState: boolean
     }) {
     const [lastDrawLocation, setLastDrawLocation] = useState<HighlightArea | null>(null)
     return (
@@ -19,6 +20,7 @@ export function WeatherPlot({ state, setState, width }:
             xType={'time'}
             onClick={() => setState({ ...state, keepCrosshair: !state.keepCrosshair })}
             onMouseLeave={(): void => { !state.keepCrosshair ? setState({ ...state, crosshairValues: [] }) : null }}
+            style={loadingState?{filter: "blur(3px)", transition: "filter .3s ease-in-out"}: {filter: "blur(0)", transition: "filter .3s ease-in-out"}}
             xDomain={
                 lastDrawLocation && [
                     lastDrawLocation.left,
@@ -93,6 +95,9 @@ export function WeatherPlot({ state, setState, width }:
                         setLastDrawLocation(area)
                     }} />
             }
+            {loadingState? <div className={styles.loadingCover}>
+                ...
+            </div> : null}
         </XYPlot>
     )
 
