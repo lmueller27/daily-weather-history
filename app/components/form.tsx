@@ -1,17 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useReducer, useState } from "react";
 import '../../node_modules/react-vis/dist/style.css';
 import styles from '../styles/form.module.css'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { formState, getWeekNumber, inputState, inputValidation, visualizationModes } from "../shared/utils";
-import { WeatherPlot } from "./weatherPlot";
-import { PlotControls } from "./plotControls";
+import { formState, inputState, inputValidation, visualizationModes } from "../shared/utils";
 import { InputSpace } from "./inputSpace";
 import { GenerateButtons } from "./generateButtons";
 import { getDateHistory, getMonthHistory, getOpenMeteoData, getWeekHistory } from "../shared/openMeteoInterface";
+import FigureSpace from "./figureSpace";
 
-export default function Form(props: any) {
+export default function Form({formId, formHook}: {formId: number, formHook: [number[], Dispatch<SetStateAction<number[]>>]}) {
     const todaysDate = new Date()
 
     const [inputState, setInputState] = useState<inputState>({
@@ -97,16 +95,7 @@ export default function Form(props: any) {
             {state.formTitle}
             <p>{state.formGeoString}</p>
             <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in on a period.</h4>
-            <div className={styles.figureSpace}>
-                <div className={styles.graphSpace}>
-                    <AutoSizer disableHeight >
-                        {({ width }: any) => (
-                            <WeatherPlot state={state} setState={setState} width={width} />
-                        )}
-                    </AutoSizer>
-                </div>
-                <PlotControls props={props} state={state} setState={setState} width={100} />
-            </div>
+            <FigureSpace formId={formId} formHook={formHook} state={state} setState={setState}/>
         </div >
     )
 
