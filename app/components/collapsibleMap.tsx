@@ -13,7 +13,7 @@ export default function CollapsibleMap({ inputState, setInputState, center, setC
     }) {
 
     const [zoom, setZoom] = useState(11)
-    const [mapOpen, setMapOpen] = useState(true);
+    const [mapOpen, setMapOpen] = useState(false);
 
     const mapRef = useRef<HTMLDivElement>(null);
 

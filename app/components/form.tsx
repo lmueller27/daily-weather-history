@@ -35,7 +35,7 @@ export default function Form({formId, formHook}: {formId: number, formHook: [num
         crosshairValues: [],
         showMin: true,
         showMax: true,
-        showMean: false,
+        showMean: true,
         showMedian: false,
         showPrec: false,
         showTrend: true,
@@ -44,6 +44,8 @@ export default function Form({formId, formHook}: {formId: number, formHook: [num
         formGeoString: '',
         currentVisMode: null,
     })
+
+    const [loadingState, setLoadingState] = useState(false)
 
     // This effect is triggered any time the input values change. It handles validation and if valid triggers the data fetching.
     useEffect(() => {
@@ -67,18 +69,26 @@ export default function Form({formId, formHook}: {formId: number, formHook: [num
                 inputCheck.start = validInterval && ltTenYears
                 inputCheck.end = validInterval && ltTenYears
                 if (Object.values(inputCheck).reduce((a, b) => a && b, true)) {
+                    setLoadingState(true)
                     await getOpenMeteoData(inputState, state, setState);
+                    setLoadingState(false)
                 }
             }
             else if (Object.values(inputCheck).reduce((a, b) => a && b, true)) {
                 if (state.currentVisMode === visualizationModes.DateHistory) {
+                    setLoadingState(true)
                     await getDateHistory(inputState, state, setState);
+                    setLoadingState(false)
                 }
                 else if (state.currentVisMode === visualizationModes.WeekHistory) {
+                    setLoadingState(true)
                     await getWeekHistory(inputState, state, setState);
+                    setLoadingState(false)
                 }
                 else if (state.currentVisMode === visualizationModes.MonthHistory) {
+                    setLoadingState(true)
                     await getMonthHistory(inputState, state, setState);
+                    setLoadingState(false)
                 }
             }
             setInputValidation(inputCheck)
@@ -91,11 +101,11 @@ export default function Form({formId, formHook}: {formId: number, formHook: [num
     return (
         <div className={styles.form} >
             <InputSpace inputState={inputState} setInputState={setInputState} inputValidation={inputValidation} />
-            <GenerateButtons state={state} setState={setState} inputState={inputState} inputValidation={inputValidation} />
+            <GenerateButtons state={state} setState={setState} inputState={inputState} inputValidation={inputValidation} setLoadingState={setLoadingState} />
             {state.formTitle}
             <p>{state.formGeoString}</p>
             <h4>Click on the series to freeze/unfreeze the tooltip. Drag to zoom in on a period.</h4>
-            <FigureSpace formId={formId} formHook={formHook} state={state} setState={setState}/>
+            <FigureSpace formId={formId} formHook={formHook} state={state} setState={setState} loadingState={loadingState} />
         </div >
     )
 
